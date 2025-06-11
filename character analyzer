@@ -1,0 +1,99 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CharacterAnalyzer extends JFrame {
+    private JTextField inputField;
+    private JTextArea resultArea;
+    private JButton analyzeButton, clearButton;
+
+    // Constructor to set up the UI
+    public CharacterAnalyzer() {
+        setTitle("Character Analyzer");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Create components
+        inputField = new JTextField(20);
+        resultArea = new JTextArea(10, 30);
+        resultArea.setEditable(false);
+        analyzeButton = new JButton("Analyze");
+        clearButton = new JButton("Clear");
+
+        // Layout
+        setLayout(new FlowLayout());
+
+        // Add components to the frame
+        add(new JLabel("Enter Text:"));
+        add(inputField);
+        add(analyzeButton);
+        add(clearButton);
+        add(new JScrollPane(resultArea));
+
+        // Add action listeners
+        analyzeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                analyzeText();
+            }
+        });
+
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inputField.setText("");
+                resultArea.setText("");
+            }
+        });
+    }
+
+    // Main method to run the application
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new CharacterAnalyzer().setVisible(true);
+            }
+        });
+    }
+
+    // Method to analyze the input text
+    private void analyzeText() {
+        String input = inputField.getText();
+        StringBuilder result = new StringBuilder();
+
+        int alphabetCount = 0, digitCount = 0, symbolCount = 0, spaceCount = 0, punctuationCount = 0;
+
+        // Analyze each character
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isLetter(c)) {
+                alphabetCount++;
+            } else if (Character.isDigit(c)) {
+                digitCount++;
+            } else if (Character.isWhitespace(c)) {
+                spaceCount++;
+            } else if (isPunctuation(c)) {
+                punctuationCount++;
+            } else {
+                symbolCount++;
+            }
+        }
+
+        // Display the results
+        result.append("Alphabets: ").append(alphabetCount).append("\n");
+        result.append("Digits: ").append(digitCount).append("\n");
+        result.append("Whitespace: ").append(spaceCount).append("\n");
+        result.append("Punctuation Marks: ").append(punctuationCount).append("\n");
+        result.append("Special Symbols: ").append(symbolCount).append("\n");
+
+        resultArea.setText(result.toString());
+    }
+
+    // Method to check if a character is a punctuation mark
+    private boolean isPunctuation(char c) {
+        return (c == ',' || c == '.' || c == ';' || c == ':' || c == '!' || c == '?' || c == '-' || c == '\"');
+    }
+}
